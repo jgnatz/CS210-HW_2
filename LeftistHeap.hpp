@@ -9,7 +9,7 @@
 *	Credit to Young Park for core implementations.
 */
 
-#include <std::vector>
+#include <vector>
 
 //Node class
 template <class DT>
@@ -42,6 +42,9 @@ public:
 
 	//Destructor
 	~LeftistHeap();
+	{
+		delete this;
+	}
 
 	/*Operator & Public Methods*/
 	/**
@@ -79,17 +82,23 @@ public:
 		rhs.root = NULL;
 	}
 
-	void printLHeap() const;
-
 	//Two additional methods specified for assignment
+	/**
+	* Public method for printing a reverse in-order representation of this heap's data.
+	* Calls private recursive method for printing.
+	*/
 	void showLH()
 	{
-		//TODO
+		showLH(root);
 	}
 
+	/**
+	* Public method for printing a reverse in-order representation of this heap's SPLs for each node.
+	* Calls private recursive method for printing.
+	*/
 	void showSPL()
 	{
-		//TODO
+		showSPL(root);
 	}
 
 private:
@@ -97,6 +106,30 @@ private:
 	LeftistNode<DT> *root;
 
 	/*Private Methods*/
+	/**
+	* Internal method for printing a reverse in-order representation of this heap's data.
+	*/
+	void showLH(LeftistNode<DT>* node)
+	{
+		if (node == NULL)
+			return;
+		showLH(node->right);
+		cout << node->element << " ";
+		showLH(node->left);
+	}
+
+	/**
+	* Internal method for printing a reverse in-order representation of this heap's SPLs for each node.
+	*/
+	void showSPL(LeftistNode<DT>* node)
+	{
+		if (node == NULL)
+			return;
+		showLH(node->right);
+		cout << node->spl << " ";
+		showLH(node->left);
+	}
+
 	/**
 	* Internal method to merge two roots h1 and h2.
 	*/
@@ -131,6 +164,8 @@ private:
 	*/
 	void swapChildren(LeftistNode<DT> * t) const
 	{
-		//TODO
+		LeftistNode* tmp = t->left;
+		t->left = t->right;
+		t->right = tmp;
 	}
 };
