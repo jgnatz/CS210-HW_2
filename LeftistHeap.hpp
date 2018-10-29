@@ -9,6 +9,8 @@
 *	Credit to Young Park for core implementations.
 */
 
+#include <std::vector>
+
 //Node class
 template <class DT>
 class LeftistNode
@@ -28,40 +30,107 @@ template <class DT>
 class LeftistHeap
 {
 public:
-	//Constructors & Destructor
+	/*Constructors & Destructor*/
+	//Default Constructor
 	LeftistHeap();
-	LeftistHeap(const LeftistHeap & rhs);
+
+	//Parameterized Constructor
+	LeftistHeap(const LeftistHeap & rhs)
+	{
+		//TODO
+	}
+
+	//Destructor
 	~LeftistHeap();
 
-	//Operator & Public Methods
-		//Implementation TO-DO
-	const LeftistHeap & operator=(const LeftistHeap & rhs);
+	/*Operator & Public Methods*/
+	/**
+	* Sets this heap's values to a parameter heap via construction and root re-allocation.
+	*/
+	const LeftistHeap & operator=(const LeftistHeap & rhs)
+	{
+		//TODO
+	}
 
-	void insert(const DT & x);
+	//Inserts a new value into the heap via merging a newly constructed heap
+	void insert(const DT & x)
+	{
+		root = merge1(new LeftistNode<DT>(x), root);
+	}
 
-	void deleteMin(DT & minItem);
+	//Deletes the minimum value (root)
+	void deleteMin(DT & minItem)
+	{
+		minItem = findMin();
+		LeftistNode<DT> *oldRoot = root;
+		root = merge1(root->left, root->right);
+		delete oldRoot;
+	}
 
-	void merge(LeftistHeap & rhs);
+	/**
+	* Merge rhs into the priority queue.
+	* rhs becomes empty.
+	*/
+	void merge(LeftistHeap & rhs)
+	{
+		if (this == &rhs) // Avoid aliasing problems
+			return;
+		root = merge1(root, rhs.root);
+		rhs.root = NULL;
+	}
 
 	void printLHeap() const;
 
 	//Two additional methods specified for assignment
-		//Implementation TO-DO
-	void showLH();
+	void showLH()
+	{
+		//TODO
+	}
 
-	void showSPL();
+	void showSPL()
+	{
+		//TODO
+	}
 
 private:
 	//Root pointer
 	LeftistNode<DT> *root;
 
-	//Private Methods
-		//Implementation TO-DO
+	/*Private Methods*/
+	/**
+	* Internal method to merge two roots h1 and h2.
+	*/
 	LeftistNode<DT> * merge1(LeftistNode<DT> *h1,
-		LeftistNode<DT> *h2) const;
+		LeftistNode<DT> *h2) const
+	{
+		if (h1 == NULL) return h2;
+		if (h2 == NULL) return h1;
+		if (h1->element < h2->element) return merge2(h1, h2);
+		else return merge2(h2, h1);
+	}
 
+	/**
+	* Internal method to merge two not empty roots.
+	* h1's root contains smallest item.
+	*/
 	LeftistNode<DT> * merge2(LeftistNode<DT> *h1,
-		LeftistNode<DT> *h2) const;
+		LeftistNode<DT> *h2) const
+	{
+		// Recursively merge its right subtree and the other tree h2.
+		h1->right = merge1(h1->right, h2);
+		// Swap if needed.
+		if (h1->left->spl < h1->right->spl)
+			swapChildren(h1);
+		// Update the spl of the merged root.
+		h1->spl = h1->right->spl + 1;
+		return h1;
+	}
 
-	void swapChildren(LeftistNode<DT> * t) const;
+	/**
+	* Internal method to swap children pointers of a target node.
+	*/
+	void swapChildren(LeftistNode<DT> * t) const
+	{
+		//TODO
+	}
 };
